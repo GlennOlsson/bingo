@@ -244,13 +244,12 @@ const setupGame = (boardId, datasetID, tiles) => {
 
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
-    const boardId = window.location.pathname.split("/").pop();
+    const boardId = window.location.pathname.split("#").pop();
 
     let state = getGameState();
     if (!state) {
         console.log("No game ID found, returning home");
-        // TODO: uncomment in prod
-        // window.location.href = "/";
+        window.location.href = "/";
     } else {
         try {
             const { datasetID, tiles } = decodeState(state);
@@ -258,8 +257,7 @@ const loadGame = () => {
             setupGame(boardId, datasetID, tiles);
         } catch (error) {
             console.error("Failed to load game:", error);
-            // TODO: uncomment in prod
-            // window.location.href = "/";
+            window.location.href = "/";
         }
     }
 }
