@@ -84,6 +84,54 @@ const decodeState = (gameState) => {
     return { datasetID, tiles };
 }
 
+const startFireworks = () => {
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js";
+    script.onload = function () {
+        for (let i = 0; i < 5; i++)
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: Math.random(), x: Math.random() }
+            });
+    };
+    document.head.appendChild(script);
+}
+
+// Check if all in one row, column, or diagonal are marked. Loads firework animation if bingo is achieved.
+const checkBingo = (tiles) => {
+    // Skipping the free tile for those rows, columns, and diagonals that include it.
+    // Indicies larger than 12 are reduced by 1 to account for the free tile at index 12.
+    const winningCombinations = [
+        // Rows
+        [0, 1, 2, 3, 4],
+        [5, 6, 7, 8, 9],
+        [10, 11, 13 - 1, 14 - 1], // [10, 11, 12, 13]
+        [15 - 1, 16 - 1, 17 - 1, 18 - 1, 19 - 1], // [14, 15, 16, 17, 18]
+        [20 - 1, 21 - 1, 22 - 1, 23 - 1, 24 - 1], // [19, 20, 21, 22, 23]
+
+        // Columns
+        [0, 5, 10, 15 - 1, 20 - 1], // [0, 5, 10, 14, 19]
+        [1, 6, 11, 16 - 1, 21 - 1], // [1, 6, 11, 15, 20]
+        [2, 7, 17 - 1, 22 - 1], // [2, 7, 16, 21]
+        [3, 8, 13 - 1, 18 - 1, 23 - 1], // [3, 8, 12, 17, 22]
+        [4, 9, 14 - 1, 19 - 1, 24 - 1], // [4, 9, 13, 18, 23]
+
+        // Diagonals
+        [0, 6, 18 - 1, 24 - 1], // [0, 6, 17, 23]
+        [4, 8, 16 - 1, 20 - 1] // [4, 8, 15, 19]
+    ];
+
+    for (let combination of winningCombinations) {
+        if (combination.every(index => tiles[index])) {
+            startFireworks();
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Handles a click on a game tile element. Toggles the "tile-marked" class
 // and updates the game state in the URL.
 const onTileClick = (event) => {
@@ -92,15 +140,17 @@ const onTileClick = (event) => {
 
     const tileIndex = parseInt(tileElem.id.split("-")[1]);
 
-    // Update game state in URL
-
+    // Update game state
     const encodedState = getGameState();
 
     let state = decodeState(encodedState);
     state.tiles[tileIndex] = !state.tiles[tileIndex];
 
+    checkBingo(state.tiles);
+
     const newEncodedState = encodeState(state.datasetID, state.tiles);
 
+    // Update game state in URL
     const url = new URL(window.location);
     url.searchParams.set('state', newEncodedState);
     window.history.replaceState({}, '', url);
@@ -149,7 +199,7 @@ const shuffleArray = (array, seed) => {
         let temp = shuffledArray[i];
         shuffledArray[i] = shuffledArray[swapIndex];
         shuffledArray[swapIndex] = temp;
-    }  
+    }
 
     return shuffledArray;
 }
@@ -174,6 +224,8 @@ const setupGame = (boardId, datasetID, tiles) => {
             tileElem.classList.remove("tile-marked");
         }
     }
+
+    checkBingo(tiles);
 }
 
 // Loads the game state from the URL and initializes the game board.
