@@ -4,15 +4,15 @@ Bingo page, supporting multiple datasets, unique boards, and progress saving wit
 ## URL Query
 The URL query is keeping the state of the game. There are 24 cells that are on or off (25th, middle, is always free). With 24 bits we can represent the state of each tile. We also represent the data set ID using 6 bits, and a checksum using 6 more bits. 
 
-By using a charset of 64 characters, we can represent 6 bits with just one character. We use `a-z`, `A-Z`, `0-9`, and `+-` as the charset, with:
+By using a charset of 64 characters, we can represent 6 bits with just one character. We use `a-z`, `A-Z`, `0-9`, and `~_` as the charset, with:
 - `a` representing `000 000` (0)
 - `b` representing `000 001` (1)
 - `A` representing `011 010` (26)
 - `B` representing `011 011` (27)
 - `0` representing `110 100` (52)
 - `1` representing `110 101` (53)
-- `+` representing `111 110` (62)
-- `-` representing `111 111` (63)
+- `~` representing `111 110` (62)
+- `_` representing `111 111` (63)
 - etc.
 
 Using 4 characters for the tile encoding, 1 character for the dataset ID encoding, and 1 character for the charset encoding, we can encode the game state in 6 characters. We store this ID as the `state` URL query.

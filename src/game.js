@@ -1,6 +1,6 @@
 const ELEM_ID_GAME_CONTAINER = "game-container";
 
-const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-";
+const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_";
 
 const ENCODING_VALUES = [
     42, 18, 51, 30, 45, 27
@@ -104,8 +104,10 @@ const createBoard = (data, freeTileLabel) => {
                 tileElem.innerText = freeTileLabel;
             } else {
                 let tileIndex = row * 5 + col;
+                if (tileIndex > 12) tileIndex -= 1; // Adjust for free tile
+
                 tileElem.id = `tile-${tileIndex}`;
-                tileElem.innerText = data[tileIndex < 12 ? tileIndex : tileIndex - 1];
+                tileElem.innerText = data[tileIndex];
             }
 
             rowElem.appendChild(tileElem);
@@ -138,12 +140,14 @@ const setupGame = (boardId, datasetID, tiles) => {
     // Free title is either from dataset or the 25th shuffled item
     let freeTileLabel = dataset.freebie ? dataset.freebie : shuffledData[24];
 
+    console.log(`Freebie is "${freeTileLabel}"`);
     createBoard(shuffledData, freeTileLabel);
 
     // Apply tile states
     for (let i = 0; i < tiles.length; i++) {
         let tileElem = document.getElementById(`tile-${i}`);
         if (tiles[i]) {
+            console.log(`Marking tile ${i} ("${tileElem}") as active`);
             tileElem.classList.add("tile-marked");
         } else {
             tileElem.classList.remove("tile-marked");
