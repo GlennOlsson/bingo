@@ -15,7 +15,7 @@ By using a charset of 64 characters, we can represent 6 bits with just one chara
 - `-` representing `111 111` (63)
 - etc.
 
-Using 4 characters for the tile encoding, 1 character for the dataset ID encoding, and 1 character for the charset encoding, we can encode the game state in 6 characters. We store this ID as the `id` URL query.
+Using 4 characters for the tile encoding, 1 character for the dataset ID encoding, and 1 character for the charset encoding, we can encode the game state in 6 characters. We store this ID as the `state` URL query.
 
 The first character encodes the dataset ID, the next 4 the tiles state, and the last character the checksum. Each character is XORed with it's corresponding value in the table below before set as the query parameter. To deocde the value, the same value is used to XOR it back.
 | Character index | XORed with | As dec |
@@ -29,3 +29,11 @@ The first character encodes the dataset ID, the next 4 the tiles state, and the 
 
 ### Checksum
 The checksum is a simple algorithm to ensure the query is correct. It is the sum of the XORed values, modulo 64.
+
+# State machine
+
+1. Landing page
+    - Select dataset and board ID. Encodes dataset id, all false tiles, and checksum as game state. Navigates to `/<boardId>?id=<gameState>`
+2. Game page
+    - Decodes game state. If fails, returns to landing.
+    - If can decode, resumes game at state.
