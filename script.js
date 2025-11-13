@@ -2,7 +2,7 @@ const ELEM_ID_LANDING = "landing";
 const ELEM_ID_GAME = "game";
 
 const isOnLanding = () => {
-    return window.location.pathname === "/" || window.location.pathname === "/index.html";
+    return window.location.hash === "";
 }
 
 const setActivePage = () => {
