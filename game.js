@@ -170,9 +170,12 @@ const onTileClick = (event) => {
     const newEncodedState = encodeState(state.datasetID, state.tiles);
 
     // Update game state in URL
-    const url = new URL(window.location);
-    url.searchParams.set('state', newEncodedState);
-    window.history.replaceState({}, '', url);
+    const hash = window.location.hash;
+    const hashParts = hash.split('?');
+    const baseHash = hashParts[0];
+    const params = new URLSearchParams(hashParts[1] || '');
+    params.set('state', newEncodedState);
+    window.location.hash = `${baseHash}?${params.toString()}`;
 }
 
 // Creates the game board HTML structure inside the game container element. The `data`
