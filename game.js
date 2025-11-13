@@ -12,7 +12,9 @@ const ENCODING_VALUES = [
 
 // Gets the encoded game state from the `state` query parameter. If not present, returns null.
 const getGameState = () => {
-    const params = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    const search = hash.indexOf('?') !== -1 ? hash.substring(hash.indexOf('?')) : window.location.search;
+    const params = new URLSearchParams(search);
     return params.has('state') ? params.get('state') : null;
 }
 
