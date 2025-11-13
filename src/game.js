@@ -1,6 +1,6 @@
 const ELEM_ID_GAME_CONTAINER = "game-container";
 
-const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_";
+const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-";
 
 const ENCODING_VALUES = [
     42, 18, 51, 30, 45, 27
@@ -39,7 +39,6 @@ const encodeState = (datasetID, tiles) => {
 
         let encodedTiles = unencodedTiles ^ ENCODING_VALUES[i];
 
-        console.log(`encoded value (${unencodedTiles}) for tiles ${tileStartIndex} to ${tileStartIndex + 5}: ${encodedTiles}`);
         encodedState += asEncodedChar(encodedTiles);
         checksum += encodedTiles;
     }
@@ -71,7 +70,6 @@ const decodeState = (gameState) => {
     for (let i = 1; i < 5; i++) {
         let char = gameState.charAt(i);
         let decodedValue = CHARSET.indexOf(char) ^ ENCODING_VALUES[i];
-        console.log(`decoded value (${char}) for tiles ${(i - 1) * 6} to ${(i - 1) * 6 + 5}: ${decodedValue}`);
         checksum += CHARSET.indexOf(char);
 
         for (let bit = 5; bit >= 0; bit--)
@@ -84,6 +82,28 @@ const decodeState = (gameState) => {
     }
 
     return { datasetID, tiles };
+}
+
+// Handles a click on a game tile element. Toggles the "tile-marked" class
+// and updates the game state in the URL.
+const onTileClick = (event) => {
+    let tileElem = event.currentTarget;
+    tileElem.classList.toggle("tile-marked");
+
+    const tileIndex = parseInt(tileElem.id.split("-")[1]);
+
+    // Update game state in URL
+
+    const encodedState = getGameState();
+
+    let state = decodeState(encodedState);
+    state.tiles[tileIndex] = !state.tiles[tileIndex];
+
+    const newEncodedState = encodeState(state.datasetID, state.tiles);
+
+    const url = new URL(window.location);
+    url.searchParams.set('state', newEncodedState);
+    window.history.replaceState({}, '', url);
 }
 
 // Creates the game board HTML structure inside the game container element. The `data`
@@ -108,6 +128,7 @@ const createBoard = (data, freeTileLabel) => {
 
                 tileElem.id = `tile-${tileIndex}`;
                 tileElem.innerText = data[tileIndex];
+                tileElem.addEventListener("click", onTileClick);
             }
 
             rowElem.appendChild(tileElem);
@@ -117,6 +138,8 @@ const createBoard = (data, freeTileLabel) => {
     }
 }
 
+// Shuffles an array using a seeded random number generator. The array
+// is not modified; a new shuffled array is returned.
 const shuffleArray = (array, seed) => {
     var rng = new Math.seedrandom(seed);
     let shuffledArray = array.slice();
@@ -140,14 +163,12 @@ const setupGame = (boardId, datasetID, tiles) => {
     // Free title is either from dataset or the 25th shuffled item
     let freeTileLabel = dataset.freebie ? dataset.freebie : shuffledData[24];
 
-    console.log(`Freebie is "${freeTileLabel}"`);
     createBoard(shuffledData, freeTileLabel);
 
     // Apply tile states
     for (let i = 0; i < tiles.length; i++) {
         let tileElem = document.getElementById(`tile-${i}`);
         if (tiles[i]) {
-            console.log(`Marking tile ${i} ("${tileElem}") as active`);
             tileElem.classList.add("tile-marked");
         } else {
             tileElem.classList.remove("tile-marked");
@@ -155,6 +176,7 @@ const setupGame = (boardId, datasetID, tiles) => {
     }
 }
 
+// Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
     const boardId = window.location.pathname.split("/").pop();
 
