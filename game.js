@@ -12,10 +12,9 @@ const ENCODING_VALUES = [
 
 // Gets the encoded game state from the `state` query parameter. If not present, returns null.
 const getGameState = () => {
-    const hash = window.location.hash;
-    const search = hash.indexOf('?') !== -1 ? hash.substring(hash.indexOf('?')) : window.location.search;
+    const search = window.location.search;
     const params = new URLSearchParams(search);
-    return params.has('state') ? params.get('state') : null;
+    return params.has("state") ? params.get("state") : null;
 }
 
 // Converts an integer value (0-63) to a character from the CHARSET.
@@ -95,7 +94,7 @@ const startFireworks = () => {
     // Load fireworks script if not already loaded. This ensures fireworks
     // are only fired once per bingo.
     if (document.getElementById(ELEM_ID_FIREWORKS_SCRIPT) == null) {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.id = ELEM_ID_FIREWORKS_SCRIPT;
         script.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js";
         script.onload = function () {
@@ -170,12 +169,9 @@ const onTileClick = (event) => {
     const newEncodedState = encodeState(state.datasetID, state.tiles);
 
     // Update game state in URL
-    const hash = window.location.hash;
-    const hashParts = hash.split('?');
-    const baseHash = hashParts[0];
-    const params = new URLSearchParams(hashParts[1] || '');
-    params.set('state', newEncodedState);
-    window.location.hash = `${baseHash}?${params.toString()}`;
+    const url = new URL(window.location);
+    url.searchParams.set("state", newEncodedState);
+    window.history.replaceState({}, "", url);
 }
 
 // Creates the game board HTML structure inside the game container element. The `data`
@@ -252,17 +248,20 @@ const setupGame = (boardId, datasetID, tiles) => {
 
 // Navigates to the landing page by clearing the URL hash and updating the active page.
 const goToLanding = () => {
-    window.history.replaceState({}, '', '/');
+    const url = new URL(window.location);
+    url.search = "";
+    window.history.replaceState({}, "", url);
     setActivePage();
 }
 
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
-    const boardId = window.location.hash.split("#").pop();
+    const boardId = new URLSearchParams(window.location.search).get("id");
+    console.log("Loading game with ID:", boardId);
 
     let state = getGameState();
     if (!state) {
-        console.log("No game ID found, returning home");
+        console.log("No game state found, returning home");
         goToLanding();
     } else {
         try {

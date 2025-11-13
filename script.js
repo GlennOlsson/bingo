@@ -2,7 +2,8 @@ const ELEM_ID_LANDING = "landing";
 const ELEM_ID_GAME = "game";
 
 const isOnLanding = () => {
-    return window.location.hash === "";
+    const params = new URLSearchParams(window.location.search);
+    return !params.has('id') || params.get('id') === null;
 }
 
 const setActivePage = () => {
