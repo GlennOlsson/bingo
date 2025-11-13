@@ -1,4 +1,5 @@
 const ELEM_ID_GAME_CONTAINER = "game-container";
+const ELEM_ID_FIREWORKS_SCRIPT = "fireworks-script";
 
 const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-";
 
@@ -84,18 +85,24 @@ const decodeState = (gameState) => {
     return { datasetID, tiles };
 }
 
+// Start fireworks if not already started.
 const startFireworks = () => {
-    const script = document.createElement('script');
-    script.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js";
-    script.onload = function () {
-        for (let i = 0; i < 5; i++)
-            confetti({
-                particleCount: 200,
-                spread: 70,
-                origin: { y: Math.random(), x: Math.random() }
-            });
-    };
-    document.head.appendChild(script);
+    // Load fireworks script if not already loaded. This ensures fireworks
+    // are only fired once per bingo.
+    if (document.getElementById(ELEM_ID_FIREWORKS_SCRIPT) == null) {
+        const script = document.createElement('script');
+        script.id = ELEM_ID_FIREWORKS_SCRIPT;
+        script.src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js";
+        script.onload = function () {
+            for (let i = 0; i < 5; i++)
+                confetti({
+                    particleCount: 200,
+                    spread: 70,
+                    origin: { y: Math.random(), x: Math.random() }
+                });
+        };
+        document.head.appendChild(script);
+    }
 }
 
 // Check if all in one row, column, or diagonal are marked. Loads firework animation if bingo is achieved.
@@ -127,6 +134,13 @@ const checkBingo = (tiles) => {
             startFireworks();
             return true;
         }
+    }
+
+    // Remove fireworks script if no longer bingo. This ensures
+    // fireworks can be restarted on subsequent bingos but only once.
+    let fireworksElem = document.getElementById(ELEM_ID_FIREWORKS_SCRIPT);
+    if (fireworksElem != null) {
+        fireworksElem.remove();
     }
 
     return false;
