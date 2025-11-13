@@ -115,8 +115,40 @@ const createBoard = (data, freeTileLabel) => {
     }
 }
 
-const newGame = (boardId) => {
-    let data = DATASETS[datasetID].data;
+const shuffleArray = (array, seed) => {
+    var rng = new Math.seedrandom(seed);
+    let shuffledArray = array.slice();
+
+    for (let i = 0; i < shuffledArray.length; i++) {
+        let swapIndex = Math.abs(rng.int32() % shuffledArray.length);
+        let temp = shuffledArray[i];
+        shuffledArray[i] = shuffledArray[swapIndex];
+        shuffledArray[swapIndex] = temp;
+    }  
+
+    return shuffledArray;
+}
+
+// Sets up the game board with the given dataset ID and tile states.
+// The `boardId` is used as seed for the shuffling of the dataset. 
+const setupGame = (boardId, datasetID, tiles) => {
+    let dataset = getDataset(datasetID);
+
+    let shuffledData = shuffleArray(dataset.data, boardId);
+    // Free title is either from dataset or the 25th shuffled item
+    let freeTileLabel = dataset.freebie ? dataset.freebie : shuffledData[24];
+
+    createBoard(shuffledData, freeTileLabel);
+
+    // Apply tile states
+    for (let i = 0; i < tiles.length; i++) {
+        let tileElem = document.getElementById(`tile-${i}`);
+        if (tiles[i]) {
+            tileElem.classList.add("tile-marked");
+        } else {
+            tileElem.classList.remove("tile-marked");
+        }
+    }
 }
 
 const loadGame = () => {
@@ -125,14 +157,17 @@ const loadGame = () => {
     let state = getGameState();
     if (!state) {
         console.log("No game ID found, returning home");
-        window.location.href = "/";
+        // TODO: uncomment in prod
+        // window.location.href = "/";
     } else {
         try {
-            const { datasetID, tiles } = decodeId(state);
+            const { datasetID, tiles } = decodeState(state);
             console.log(`Loaded game with dataset ID: ${datasetID}, tiles: ${tiles}`);
+            setupGame(boardId, datasetID, tiles);
         } catch (error) {
             console.error("Failed to load game:", error);
-            window.location.href = "/";
+            // TODO: uncomment in prod
+            // window.location.href = "/";
         }
     }
 }

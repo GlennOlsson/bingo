@@ -2,7 +2,6 @@
 // needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is optional and
 // indicates which item should be used as the free space in the center of the card. It should
 // NOT be included in the `data` array.
-export
 const DATASETS = {
     0: {
         name: "Bingo",
@@ -72,3 +71,5 @@ const DATASETS = {
         ]
     }
 }
+
+const getDataset = (id) => DATASETS[id];
