@@ -242,6 +242,11 @@ const setupGame = (boardId, datasetID, tiles) => {
     checkBingo(tiles);
 }
 
+const goToLanding = () => {
+    window.history.replaceState({}, '', '/');
+    setActivePage();
+}
+
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
     const boardId = window.location.hash.split("#").pop();
@@ -249,7 +254,7 @@ const loadGame = () => {
     let state = getGameState();
     if (!state) {
         console.log("No game ID found, returning home");
-        window.history.replaceState({}, '', '/');
+        goToLanding();
     } else {
         try {
             const { datasetID, tiles } = decodeState(state);
@@ -257,7 +262,7 @@ const loadGame = () => {
             setupGame(boardId, datasetID, tiles);
         } catch (error) {
             console.error("Failed to load game:", error);
-            window.history.replaceState({}, '', '/');
+            goToLanding();
         }
     }
 }
