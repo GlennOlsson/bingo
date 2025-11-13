@@ -1,8 +1,11 @@
 const ELEM_ID_GAME_CONTAINER = "game-container";
 const ELEM_ID_FIREWORKS_SCRIPT = "fireworks-script";
 
+// Character set for encoding game state (64 characters for 6-bit values). The index
+// of each character represents its encoded value.
 const CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-";
 
+// Values to XOR with dataset ID and tile groups during encoding/decoding.
 const ENCODING_VALUES = [
     42, 18, 51, 30, 45, 27
 ]
@@ -242,6 +245,7 @@ const setupGame = (boardId, datasetID, tiles) => {
     checkBingo(tiles);
 }
 
+// Navigates to the landing page by clearing the URL hash and updating the active page.
 const goToLanding = () => {
     window.history.replaceState({}, '', '/');
     setActivePage();
