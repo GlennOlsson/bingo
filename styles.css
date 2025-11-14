@@ -21,7 +21,10 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 18px;
+    container-type: inline-size;
+}
+.game-tile > p {
+    font-size: 16cqw;
 }
 
 .tile-marked, #free-tile {
