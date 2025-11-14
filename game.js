@@ -1,3 +1,4 @@
+const ELEM_ID_BACK_TO_LANDING_BUTTON = "back-to-landing-button";
 const ELEM_ID_GAME_TITLE = "game-title";
 const ELEM_ID_GAME_DESCRIPTION = "game-description";
 const ELEM_ID_GAME_CONTAINER = "game-container";
@@ -190,7 +191,7 @@ const createBoard = (data, freeTileLabel) => {
             let tileElem = document.createElement("div");
             tileElem.classList.add("game-tile");
             let tileParagraph = document.createElement("p");
-            
+
             if (row === 2 && col === 2) {
                 tileElem.id = "free-tile";
                 tileParagraph.innerText = freeTileLabel;
@@ -202,12 +203,12 @@ const createBoard = (data, freeTileLabel) => {
             } else {
                 let tileIndex = row * 5 + col;
                 if (tileIndex > 12) tileIndex -= 1; // Adjust for free tile
-                
+
                 tileElem.id = `tile-${tileIndex}`;
                 tileParagraph.innerText = data[tileIndex];
                 tileElem.addEventListener("click", onTileClick);
             }
-            
+
             tileElem.appendChild(tileParagraph);
             rowElem.appendChild(tileElem);
         }
@@ -215,6 +216,8 @@ const createBoard = (data, freeTileLabel) => {
         gameContainerElem.appendChild(rowElem);
     }
 }
+
+const isActiveGame = () => document.getElementById(ELEM_ID_GAME_CONTAINER).hasChildNodes();
 
 // Shuffles an array using a seeded random number generator. The array
 // is not modified; a new shuffled array is returned.
@@ -241,12 +244,23 @@ const setupGameTitle = (dataset) => {
     descriptionElem.textContent = dataset.description;
 }
 
+// Sets up the "Back to home" button to navigate to the landing page.
+const setupBackToLandingButton = () => {
+    const backButton = document.getElementById(ELEM_ID_BACK_TO_LANDING_BUTTON);
+    backButton.addEventListener("click", goToLanding);
+}
+
 // Sets up the game board with the given dataset ID and tile states.
 // The `boardId` is used as seed for the shuffling of the dataset. 
 const setupGame = (boardId, datasetID, tiles) => {
     let dataset = getDataset(datasetID);
 
     setupGameTitle(dataset);
+    setupBackToLandingButton();
+
+    if (isActiveGame()) {
+        document.getElementById(ELEM_ID_GAME_CONTAINER).innerHTML = "";
+    }
 
     let shuffledData = shuffleArray(dataset.data, boardId);
     // Free title is either from dataset or the 25th shuffled item
