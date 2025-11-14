@@ -73,3 +73,4 @@ const DATASETS = {
 }
 
 const getDataset = (id) => DATASETS[id];
+const getAllDatasets = () => DATASETS;

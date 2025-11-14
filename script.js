@@ -3,7 +3,7 @@ const ELEM_ID_GAME = "game";
 
 const isOnLanding = () => {
     const params = new URLSearchParams(window.location.search);
-    return !params.has('id') || params.get('id') === null;
+    return !params.has("id") || params.get("id") === null;
 }
 
 const setActivePage = () => {
@@ -19,9 +19,16 @@ const setActivePage = () => {
     }
 }
 
-window.onload = () => {
+const checkActivePage = () => {
     setActivePage();
-    if (!isOnLanding()) {
+    if (isOnLanding()) {
+        createLanding();
+    }
+    else {
         loadGame();
     }
+}
+
+window.onload = () => {
+    checkActivePage();
 }

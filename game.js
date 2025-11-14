@@ -251,7 +251,8 @@ const goToLanding = () => {
     const url = new URL(window.location);
     url.search = "";
     window.history.replaceState({}, "", url);
-    setActivePage();
+    console.log("Returning to landing page");
+    checkActivePage();
 }
 
 // Loads the game state from the URL and initializes the game board.
