@@ -4,6 +4,13 @@
 
 .game-row {
     display: flex;
+    width: 500px;
+    height: 100px;
+}
+
+.game-board {
+    height: 500px;
+    width: 500px;
 }
 
 .game-tile {
