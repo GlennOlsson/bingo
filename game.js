@@ -1,3 +1,5 @@
+const ELEM_ID_GAME_TITLE = "game-title";
+const ELEM_ID_GAME_DESCRIPTION = "game-description";
 const ELEM_ID_GAME_CONTAINER = "game-container";
 const ELEM_ID_FIREWORKS_SCRIPT = "fireworks-script";
 
@@ -230,10 +232,21 @@ const shuffleArray = (array, seed) => {
     return shuffledArray;
 }
 
+// Sets up the game title and description based on the dataset.
+const setupGameTitle = (dataset) => {
+    const titleElem = document.getElementById(ELEM_ID_GAME_TITLE);
+    const descriptionElem = document.getElementById(ELEM_ID_GAME_DESCRIPTION);
+
+    titleElem.textContent = `${dataset.name} bingo`;
+    descriptionElem.textContent = dataset.description;
+}
+
 // Sets up the game board with the given dataset ID and tile states.
 // The `boardId` is used as seed for the shuffling of the dataset. 
 const setupGame = (boardId, datasetID, tiles) => {
     let dataset = getDataset(datasetID);
+
+    setupGameTitle(dataset);
 
     let shuffledData = shuffleArray(dataset.data, boardId);
     // Free title is either from dataset or the 25th shuffled item

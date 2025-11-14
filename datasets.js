@@ -4,8 +4,8 @@
 // NOT be included in the `data` array.
 const DATASETS = {
     0: {
-        name: "Bingo",
-        description: "Standard Bingo numbers",
+        name: "Numbers 1-50",
+        description: "Standard Bingo with a random free space",
         data: [
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
             "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
@@ -16,11 +16,10 @@ const DATASETS = {
     },
     1: {
         name: "US States",
-        description: "US States dataset",
+        description: "The 48 continental US States with California as the free space",
         freebie: "California",
         data: [
             "Alabama",
-            "Alaska",
             "Arizona",
             "Arkansas",
             "Colorado",
@@ -28,7 +27,6 @@ const DATASETS = {
             "Delaware",
             "Florida",
             "Georgia",
-            "Hawaii",
             "Idaho",
             "Illinois",
             "Indiana",

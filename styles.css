@@ -2,6 +2,11 @@
     display: none;
 }
 
+#game-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 .game-row {
     display: flex;
     width: 500px;
