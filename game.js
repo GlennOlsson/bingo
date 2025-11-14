@@ -187,18 +187,26 @@ const createBoard = (data, freeTileLabel) => {
         for (let col = 0; col < 5; col++) {
             let tileElem = document.createElement("div");
             tileElem.classList.add("game-tile");
+            let tileParagraph = document.createElement("p");
+            
             if (row === 2 && col === 2) {
                 tileElem.id = "free-tile";
-                tileElem.innerText = freeTileLabel;
+                tileParagraph.innerText = freeTileLabel;
+
+                let freeTileNote = document.createElement("small");
+                freeTileNote.innerText = "(Free)";
+                tileParagraph.appendChild(document.createElement("br"));
+                tileParagraph.appendChild(freeTileNote);
             } else {
                 let tileIndex = row * 5 + col;
                 if (tileIndex > 12) tileIndex -= 1; // Adjust for free tile
-
+                
                 tileElem.id = `tile-${tileIndex}`;
-                tileElem.innerText = data[tileIndex];
+                tileParagraph.innerText = data[tileIndex];
                 tileElem.addEventListener("click", onTileClick);
             }
-
+            
+            tileElem.appendChild(tileParagraph);
             rowElem.appendChild(tileElem);
         }
 
