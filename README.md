@@ -31,11 +31,3 @@ The first character encodes the dataset ID, the next 4 the tiles state, and the 
 
 ### Checksum
 The checksum is a simple algorithm to ensure the query is correct. It is the sum of the XORed values, modulo 64.
-
-# State machine
-
-1. Landing page
-    - Select dataset and board ID. Encodes dataset id, all false tiles, and checksum as game state. Navigates to `/<boardId>?id=<gameState>`
-2. Game page
-    - Decodes game state. If fails, returns to landing.
-    - If can decode, resumes game at state.
