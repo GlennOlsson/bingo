@@ -46,15 +46,14 @@ const encodeState = (datasetID, tiles) => {
         let encodedTiles = unencodedTiles ^ ENCODING_VALUES[i];
         
         checksum += encodedTiles;
-        console.log(`added ${encodedTiles} to checksum, now ${checksum}`);
         encodedState += asEncodedChar(encodedTiles);
     }
     
     const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
     
     checksum += encodedDatasetID;
-    checksum %= 64;
-    
+
+    // Will be modulo 64 due to 6-bit encoding
     const encodedChecksum = checksum ^ ENCODING_VALUES[5];
 
     // Half of each char is checksum, half is dataset ID
@@ -83,19 +82,19 @@ const decodeState = (gameState) => {
         let charValue = CHARSET.indexOf(char);
         let decodedValue = charValue ^ ENCODING_VALUES[i];
         checksum += charValue;
-        console.log(`added ${charValue} to checksum, now ${checksum}`);
 
         for (let bit = 5; bit >= 0; bit--)
             tiles.push((decodedValue & (1 << bit)) !== 0);
     }
 
-
     const endChar1Val = CHARSET.indexOf(gameState.charAt(4));
     const endChar2Val = CHARSET.indexOf(gameState.charAt(5));
 
     const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
-    checksum += encodedDatasetID;
 
+    checksum += encodedDatasetID;
+    checksum %= 64;
+    
     const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
 
     const decodedChecksum = ((endChar1Val & 0b000111) | (endChar2Val & 0b111000)) ^ ENCODING_VALUES[5];
