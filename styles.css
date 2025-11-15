@@ -11,8 +11,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90vw;
-    margin: 5vw;
 }
 
 #game-header-container {
