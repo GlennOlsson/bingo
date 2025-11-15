@@ -54,7 +54,7 @@ const encodeState = (datasetID, tiles) => {
     
     checksum += encodedDatasetID;
     checksum %= 64;
-    console.log(`Encoding state: datasetID=${datasetID}, checksum=${checksum}`);
+    
     const encodedChecksum = checksum ^ ENCODING_VALUES[5];
 
     // Half of each char is checksum, half is dataset ID
@@ -95,13 +95,12 @@ const decodeState = (gameState) => {
 
     const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
     checksum += encodedDatasetID;
+
     const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
 
     const decodedChecksum = ((endChar1Val & 0b000111) | (endChar2Val & 0b111000)) ^ ENCODING_VALUES[5];
 
-    console.log(`Encoding state: datasetID=${datasetID}, checksum=${decodedChecksum} (expected ${checksum % 64})`);
-
-    if ((checksum % 64) !== decodedChecksum) {
+    if (checksum !== decodedChecksum) {
         throw new Error("Invalid checksum");
     }
 
