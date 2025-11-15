@@ -31,11 +31,11 @@ Each value is XORed with it's corresponding value in the table below before enco
 | 4               | 101 101    | 45     |
 | 5               | 011 011    | 27     |
 
-The following table represent the characters in the state in the URL query. Bit 0 is the most significant bit and bit 6 the least significant bit.
+The following table represent the characters in the state in the URL query. Bit 0 is the most significant bit and bit 6 the least significant bit. Remember that tile 12 does not need to be encoded as it's free.
 | Character index | Bit 0            | Bit 1            | Bit 2            | Bit 3          | Bit 4          | Bit 5          |
 |-----------------|------------------|------------------|------------------|----------------|----------------|----------------|
-| 0               | tile 1           | tile 2           | tile 3           | tile 4         | tile 5         | tile 6         |
-| 1               | tile 7           | tile 8           | tile 9           | tile 10        | tile 11        | tile 12        |
+| 0               | tile 0           | tile 1           | tile 2           | tile 3         | tile 4         | tile 5         |
+| 1               | tile 6           | tile 7           | tile 8           | tile 9         | tile 10        | tile 11        |
 | 2               | tile 13          | tile 14          | tile 15          | tile 16        | tile 17        | tile 18        |
 | 3               | tile 19          | tile 20          | tile 21          | tile 22        | tile 23        | tile 24        |
 | 4               | dataset ID bit 0 | dataset ID bit 1 | dataset ID bit 2 | checksum bit 3 | checksum bit 4 | checksum bit 5 |
