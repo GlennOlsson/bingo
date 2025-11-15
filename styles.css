@@ -2,11 +2,17 @@
     display: none !important;
 }
 
+/*  
+    Game container is 90% of width, i.e. 90vw
+    Each tile is 20% of that, i.e. 18vw, both width and height
+    Each row is 18vw high and 90vw wide
+*/
 #game {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 90vw;
+    margin: 5vw;
 }
 
 #game-header-container {
@@ -20,18 +26,18 @@
 
 .game-row {
     display: flex;
-    width: 500px;
-    height: 100px;
+    width: 90vw;
+    height: 18vw;
 }
 
 .game-board {
-    height: 500px;
-    width: 500px;
+    height: 90vw;
+    width: 90vw;
 }
 
 .game-tile {
-    width: 100px;
-    height: 100px;
+    width: 18vw;
+    height: 18vw;
     border: 1px solid #000;
     display: flex;
     align-items: center;
@@ -39,10 +45,12 @@
     text-align: center;
     container-type: inline-size;
 }
-.game-tile > p {
-    font-size: 16cqw;
+
+.game-tile>p {
+    word-break: break-word;
 }
 
-.tile-marked, #free-tile {
+.tile-marked,
+#free-tile {
     background-color: aquamarine;
 }
