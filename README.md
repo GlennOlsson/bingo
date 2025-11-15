@@ -1,7 +1,9 @@
 # Bingo
 Bingo page, supporting multiple datasets, unique boards, and progress saving without using storage
 
-<https://bingo.gl1.se>
+<https://bingo.gl1.se> 
+
+[![Favicon](./favicon.svg)](https://bingo.gl1.se)
 
 ## URL Query
 The URL query is keeping the state of the game. There are 24 cells that are on or off (25th, middle, is always free). With 24 bits we can represent the state of each tile. We also represent the data set ID using 6 bits, and a checksum using 6 more bits. 
