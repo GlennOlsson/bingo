@@ -307,7 +307,6 @@ const goToLanding = () => {
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
     const boardId = new URLSearchParams(window.location.search).get("id");
-    console.log("Loading game with ID:", boardId);
 
     let state = getGameState();
     if (!state) {
@@ -316,7 +315,6 @@ const loadGame = () => {
     } else {
         try {
             const { datasetID, tiles } = decodeState(state);
-            console.log(`Loaded game with dataset ID: ${datasetID}, tiles: ${tiles}`);
             setupGame(boardId, datasetID, tiles);
         } catch (error) {
             console.error("Failed to load game:", error);
