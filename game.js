@@ -29,30 +29,38 @@ const asInt = (tileIsActive) => tileIsActive ? 1 : 0;
 // Encode the dataset ID and tiles into a game state string. `tiles` is a 24-item array
 // of booleans representing a tile being marked (true) or unmarked (false).
 const encodeState = (datasetID, tiles) => {
-    let encodedState = "";
     let checksum = 0;
+    let encodedState = "";
 
-    const encodedDatasetID = datasetID ^ ENCODING_VALUES[0];
-    encodedState += asEncodedChar(encodedDatasetID);
-    checksum += encodedDatasetID;
-
-    for (let i = 1; i < 5; i++) {
-        let tileStartIndex = (i - 1) * 6;
-        let unencodedTiles = asInt(tiles[tileStartIndex]) << 5 |
+    
+    for (let i = 0; i < 4; i++) {
+        let tileStartIndex = i * 6;
+        let unencodedTiles = 
+            asInt(tiles[tileStartIndex]) << 5 |
             asInt(tiles[tileStartIndex + 1]) << 4 |
             asInt(tiles[tileStartIndex + 2]) << 3 |
             asInt(tiles[tileStartIndex + 3]) << 2 |
             asInt(tiles[tileStartIndex + 4]) << 1 |
             asInt(tiles[tileStartIndex + 5]);
-
+        
         let encodedTiles = unencodedTiles ^ ENCODING_VALUES[i];
-
-        encodedState += asEncodedChar(encodedTiles);
+        
         checksum += encodedTiles;
+        console.log(`added ${encodedTiles} to checksum, now ${checksum}`);
+        encodedState += asEncodedChar(encodedTiles);
     }
+    
+    const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
+    
+    checksum += encodedDatasetID;
+    checksum %= 64;
+    console.log(`Encoding state: datasetID=${datasetID}, checksum=${checksum}`);
+    const encodedChecksum = checksum ^ ENCODING_VALUES[5];
 
-    const encodedChecksum = checksum % 64;
-    encodedState += asEncodedChar(encodedChecksum);
+    // Half of each char is checksum, half is dataset ID
+    encodedState += asEncodedChar((encodedDatasetID & 0b111000) | (encodedChecksum & 0b000111));
+    encodedState += asEncodedChar((encodedDatasetID & 0b000111) | (encodedChecksum & 0b111000));
+    
     return encodedState;
 }
 
@@ -69,23 +77,31 @@ const decodeState = (gameState) => {
 
     let checksum = 0;
 
-    const encodedDatasetID = CHARSET.indexOf(gameState.charAt(0));
-    const datasetID = encodedDatasetID ^ ENCODING_VALUES[0];
-    checksum += encodedDatasetID;
-
     let tiles = [];
-
-    for (let i = 1; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
         let char = gameState.charAt(i);
-        let decodedValue = CHARSET.indexOf(char) ^ ENCODING_VALUES[i];
-        checksum += CHARSET.indexOf(char);
+        let charValue = CHARSET.indexOf(char);
+        let decodedValue = charValue ^ ENCODING_VALUES[i];
+        checksum += charValue;
+        console.log(`added ${charValue} to checksum, now ${checksum}`);
 
         for (let bit = 5; bit >= 0; bit--)
             tiles.push((decodedValue & (1 << bit)) !== 0);
     }
 
-    const encodedChecksum = CHARSET.indexOf(gameState.charAt(5));
-    if ((checksum % 64) !== encodedChecksum) {
+
+    const endChar1Val = CHARSET.indexOf(gameState.charAt(4));
+    const endChar2Val = CHARSET.indexOf(gameState.charAt(5));
+
+    const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
+    checksum += encodedDatasetID;
+    const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
+
+    const decodedChecksum = ((endChar1Val & 0b000111) | (endChar2Val & 0b111000)) ^ ENCODING_VALUES[5];
+
+    console.log(`Encoding state: datasetID=${datasetID}, checksum=${decodedChecksum} (expected ${checksum % 64})`);
+
+    if ((checksum % 64) !== decodedChecksum) {
         throw new Error("Invalid checksum");
     }
 
