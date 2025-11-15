@@ -2,6 +2,12 @@
     display: none !important;
 }
 
+#create-game {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
 /*  
     Game container is 90% of width, i.e. 90vw
     Each tile is 20% of that, i.e. 18vw, both width and height
