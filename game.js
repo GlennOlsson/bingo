@@ -249,6 +249,36 @@ const shuffleArray = (array, seed) => {
     return shuffledArray;
 }
 
+// Get the freebie tile. Either pick a random item from the freebie list (if it exists). The
+// random value is deterministic based on the seed, just like `shuffleArray` and thus will
+// be the same as long as the id is the same. If `freebie` does not exist or is not a list, returns
+// the 25th element in the shuffled data array which is the first data item not used on the board.
+const getFreebie = (dataset, seed, shuffledData) => {
+    const key = "freebie"
+
+    const fromDataSet = () => shuffledData[24];
+
+    // If freebie does not exist, return early
+    if(!dataset.hasOwnProperty(key))
+        return fromDataSet();
+
+    const freebie = dataset[key]
+    // If length doesn't exist on freebie or the list has no elements
+    if(!freebie.length || freebie.length < 1)
+        return fromDataSet();
+    
+    // Could be a string at this point. Don't allow this
+    if(typeof freebie == "string")
+        return fromDataSet();
+
+    let length = freebie.length;
+    let rng = new Math.seedrandom(seed);
+
+    let freebieIndex = Math.abs(rng.int32() % length);
+
+    return freebie[freebieIndex]
+}
+
 // Sets up the game title and description based on the dataset.
 const setupGameTitle = (dataset) => {
     const titleElem = document.getElementById(ELEM_ID_GAME_TITLE);
@@ -277,8 +307,7 @@ const setupGame = (boardId, datasetID, tiles) => {
     }
 
     let shuffledData = shuffleArray(dataset.data, boardId);
-    // Free title is either from dataset or the 25th shuffled item
-    let freeTileLabel = dataset.freebie ? dataset.freebie : shuffledData[24];
+    let freeTileLabel = getFreebie(dataset, boardId, shuffledData);
 
     createBoard(shuffledData, freeTileLabel);
 

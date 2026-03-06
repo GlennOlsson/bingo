@@ -1,6 +1,7 @@
 // Each dataset has a `name`, `description`, and an `data` array of data items. The dataset
-// needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is optional and
-// indicates which item should be used as the free space in the center of the card. It should
+// needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is 
+// an optional list indicating which items can be used as the free space in the center of the card. One 
+// item will be picked at random (deterministically based on the game id). The items in `freebie` should
 // NOT be included in the `data` array.
 const DATASETS = {
     0: {
@@ -17,7 +18,7 @@ const DATASETS = {
     1: {
         name: "US States",
         description: "The 48 continental US States with California as the free space",
-        freebie: "California",
+        freebie: ["California"],
         data: [
             "Alabama",
             "Arizona",
@@ -71,7 +72,7 @@ const DATASETS = {
     2: {
         name: "Tignes 2026",
         description: "Blah blah",
-        freebie: "Go to Apres",
+        freebie: ["Go to Apres"],
         data: [
             "Meet people from 5 different countries",
             "Meet a person from each continent (except Antarctica)",
