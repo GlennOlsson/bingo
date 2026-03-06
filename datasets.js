@@ -4,7 +4,7 @@
 // item will be picked at random (deterministically based on the board id). The items in `freebie` should
 // NOT be included in the `data` array.
 const DATASETS = {
-    0: {
+    2: {
         name: "Numbers 1-50",
         description: "Standard Bingo with a random free space",
         data: [
@@ -69,7 +69,7 @@ const DATASETS = {
             "Wyoming"
         ]
     },
-    2: {
+    0: {
         name: "Tignes 2026",
         description: "I will buy a Jägermeister shot to the first 5 people to get Bingo. Join the Bingo Whatsapp group",
         freebie: ["Go to Apres", "Drink a beer"],
