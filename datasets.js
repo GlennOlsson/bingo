@@ -71,7 +71,7 @@ const DATASETS = {
     },
     2: {
         name: "Tignes 2026",
-        description: "Blah blah",
+        description: "I will buy a Jägermeister shot to the first 5 people to get Bingo. Join the Bingo Whatsapp group",
         freebie: ["Go to Apres"],
         data: [
             "Meet people from 5 different countries",
