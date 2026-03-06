@@ -72,10 +72,10 @@ const DATASETS = {
     2: {
         name: "Tignes 2026",
         description: "I will buy a Jägermeister shot to the first 5 people to get Bingo. Join the Bingo Whatsapp group",
-        freebie: ["Go to Apres"],
+        freebie: ["Go to Apres", "Drink a beer"],
         data: [
             "Meet people from 5 different countries",
-            "Meet a person from each continent (except Antarctica)",
+            "Meet a person from 6 continents",
             "Kiss someone in a lift",
             "Do a shirtless run",
             "Have a shot before lunch",
@@ -105,8 +105,8 @@ const DATASETS = {
             "Take a snus",
             "Dance on a table at apres",
             "Someone says “I have a girlfriend/boyfriend”",
-            "Met someone living in the same city as you",
-            "Someone introduces themself to you for the 3rd time",
+            "Meet someone living in the same city as you",
+            "Someone introduces themselves for the 3rd time",
             "Lose your group",
             "Meet someone you know",
             "Successfully wingman someone",
@@ -118,9 +118,11 @@ const DATASETS = {
             "Ride into a net/barrier",
             "Break a glass in a bar",
             "Zamboni a beer",
-            "Have a homecooked meal",
+            "Have a home cooked meal",
             "Ca plane pa moi plays at apres",
             "Hook up in a bathroom",
+            "Start a snowball fight",
+            "Build a snow man",
         ]
     }
 }
