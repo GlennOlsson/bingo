@@ -32,25 +32,25 @@ const encodeState = (datasetID, tiles) => {
     let checksum = 0;
     let encodedState = "";
 
-    
+
     for (let i = 0; i < 4; i++) {
         let tileStartIndex = i * 6;
-        let unencodedTiles = 
+        let unencodedTiles =
             asInt(tiles[tileStartIndex]) << 5 |
             asInt(tiles[tileStartIndex + 1]) << 4 |
             asInt(tiles[tileStartIndex + 2]) << 3 |
             asInt(tiles[tileStartIndex + 3]) << 2 |
             asInt(tiles[tileStartIndex + 4]) << 1 |
             asInt(tiles[tileStartIndex + 5]);
-        
+
         let encodedTiles = unencodedTiles ^ ENCODING_VALUES[i];
-        
+
         checksum += encodedTiles;
         encodedState += asEncodedChar(encodedTiles);
     }
-    
+
     const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
-    
+
     checksum += encodedDatasetID;
 
     // Will be modulo 64 due to 6-bit encoding
@@ -59,7 +59,7 @@ const encodeState = (datasetID, tiles) => {
     // Half of each char is checksum, half is dataset ID
     encodedState += asEncodedChar((encodedDatasetID & 0b111000) | (encodedChecksum & 0b000111));
     encodedState += asEncodedChar((encodedDatasetID & 0b000111) | (encodedChecksum & 0b111000));
-    
+
     return encodedState;
 }
 
@@ -94,7 +94,7 @@ const decodeState = (gameState) => {
 
     checksum += encodedDatasetID;
     checksum %= 64;
-    
+
     const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
 
     const decodedChecksum = ((endChar1Val & 0b000111) | (endChar2Val & 0b111000)) ^ ENCODING_VALUES[5];
@@ -259,16 +259,16 @@ const getFreebie = (dataset, seed, shuffledData) => {
     const fromDataSet = () => shuffledData[24];
 
     // If freebie does not exist, return early
-    if(!dataset.hasOwnProperty(key))
+    if (!dataset.hasOwnProperty(key))
         return fromDataSet();
 
     const freebie = dataset[key]
     // If length doesn't exist on freebie or the list has no elements
-    if(!freebie.length || freebie.length < 1)
+    if (!freebie.length || freebie.length < 1)
         return fromDataSet();
-    
+
     // Could be a string at this point. Don't allow this
-    if(typeof freebie == "string")
+    if (typeof freebie == "string")
         return fromDataSet();
 
     let length = freebie.length;
