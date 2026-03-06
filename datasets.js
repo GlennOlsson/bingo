@@ -1,7 +1,7 @@
 // Each dataset has a `name`, `description`, and an `data` array of data items. The dataset
 // needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is 
 // an optional list indicating which items can be used as the free space in the center of the card. One 
-// item will be picked at random (deterministically based on the game id). The items in `freebie` should
+// item will be picked at random (deterministically based on the board id). The items in `freebie` should
 // NOT be included in the `data` array.
 const DATASETS = {
     0: {

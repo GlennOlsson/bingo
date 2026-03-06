@@ -45,11 +45,11 @@ The following table describes the characters in the `state` URL query before the
 
 Using this table, you can manually decode a game state. For instance, take a game with state `bsZEOp`. The first character `b` == `1` in our base64 charset. `1 XOR 0b101010` (from the table above) == `0b101_011`, meaning the 1st, 3rd, 5th and 6th tile is marked. Decoding the other characters is left as an exercise for the reader.
 
-### Game ID
-The `id` URL query parameter is the name of the player. This is used as a seed for the random number generator randomizing the board. This ensures that the board will be in the same order each time the dataset is shuffled, as long as the game ID stays the same. Changing the game ID of an active game (with a game state) will only reshuffle the board, but the checked tiles will stay the same.
+### Board ID
+The `id` URL query parameter is the name of the player. This is used as a seed for the random number generator randomizing the board. This ensures that the board will be in the same order each time the dataset is shuffled, as long as the board ID stays the same. The board ID is part of the checksum so changing the board ID of an active board (with a game state) will (63 out of 64 times) result in a failed decoding.
 
 ### Checksum
-The checksum is a simple algorithm to ensure the query is correct after decoding. It is the sum of the XORed values, modulo 64.
+The checksum is a simple algorithm to ensure the query is correct after decoding. It is the sum of the XORed values and the code point value of each character in the board ID, modulo 64.
 
 ### Why so complicated?
 Because it's fun!

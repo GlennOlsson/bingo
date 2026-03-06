@@ -31,9 +31,10 @@ const asEncodedChar = (value) => CHARSET.charAt(value);
 // Converts a boolean tile state to an integer (1 for true, 0 for false).
 const asInt = (tileIsActive) => tileIsActive ? 1 : 0;
 
-// Encode the dataset ID and tiles into a game state string. `tiles` is a 24-item array
+// Encode the dataset ID and tiles into a game state string. `boardID` is the 
+// `id` URL query parameter. `tiles` is a 24-item array
 // of booleans representing a tile being marked (true) or unmarked (false).
-const encodeState = (datasetID, gameID, tiles) => {
+const encodeState = (datasetID, boardID, tiles) => {
     let checksum = 0;
     let encodedState = "";
 
@@ -58,9 +59,9 @@ const encodeState = (datasetID, gameID, tiles) => {
     const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
     checksum += encodedDatasetID;
 
-    // Add game ID values
-    for(let i in gameID) {
-        checksum += gameID.codePointAt(i)
+    // Add board ID values
+    for(let i in getBoardID) {
+        checksum += getBoardID.codePointAt(i)
     }
 
     // Will be modulo 64 due to 6-bit encoding
@@ -104,7 +105,7 @@ const decodeState = (gameState) => {
 
     checksum += encodedDatasetID;
     
-    // Add game ID values
+    // Add board ID values
     const boardID = getBoardID();
     for(let i in boardID) {
         checksum += boardID.codePointAt(i)
