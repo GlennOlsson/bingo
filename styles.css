@@ -248,7 +248,7 @@ body {
 
 .game-tile > p {
     word-break: break-word;
-    font-size: clamp(0.4rem, 7.5cqw, 1.3rem);
+    font-size: clamp(0.6rem, 7.5cqw, 1.3rem);
     line-height: 1.15;
     margin: 0;
     overflow: visible;
