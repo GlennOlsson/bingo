@@ -60,8 +60,8 @@ const encodeState = (datasetID, boardID, tiles) => {
     checksum += encodedDatasetID;
 
     // Add board ID values
-    for(let i in getBoardID) {
-        checksum += getBoardID.codePointAt(i)
+    for (let i in boardID) {
+        checksum += boardID.codePointAt(i)
     }
 
     // Will be modulo 64 due to 6-bit encoding
@@ -104,11 +104,11 @@ const decodeState = (gameState) => {
     const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
 
     checksum += encodedDatasetID;
-    
+
     // Add board ID values
     const boardID = getBoardID();
-    for(let i in boardID) {
-        checksum += boardID.codePointAt(i)
+    for (let i in boardID) {
+        checksum += boardID.codePointAt(i);
     }
 
     // This happens in encoding stage when ORed into halves
@@ -201,6 +201,7 @@ const onTileClick = (event) => {
     state.tiles[tileIndex] = !state.tiles[tileIndex];
 
     checkBingo(state.tiles);
+
     const boardID = getBoardID();
 
     const newEncodedState = encodeState(state.datasetID, boardID, state.tiles);
