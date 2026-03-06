@@ -222,6 +222,8 @@ body {
 .game-tile {
     width: calc(20vw - 7.2px);
     height: calc(18vw - 7.2px);
+    /** Only horizontal margin. 7.2/2 */
+    margin: 0px 3.6px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     display: flex;
@@ -250,6 +252,7 @@ body {
     line-height: 1.15;
     margin: 0;
     overflow: visible;
+    padding: 1px;
 }
 
 .tile-marked {
@@ -339,6 +342,8 @@ footer a:hover {
     .game-tile {
         width: calc(20vw - 5.4px);
         height: calc(20vw - 5.4px);
+        /** Only horizontal margin. 5.4/2 */
+        margin: 0px 2.7px;
         border: 1.5px solid var(--border-color);
         border-radius: 6px;
     }
@@ -393,6 +398,8 @@ footer a:hover {
     .game-tile {
         width: calc(20vw - 4px);
         height: calc(20vw - 4px);
+        /** Only horizontal margin. 5.4/2 */
+        margin: 0px 2px;
         border: 1px solid var(--border-color);
     }
 }
