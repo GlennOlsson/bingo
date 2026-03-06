@@ -13,6 +13,11 @@ const ENCODING_VALUES = [
     42, 18, 51, 30, 45, 27
 ]
 
+// Get the board ID inside the `id` query parameter
+const getBoardID = () => {
+    return new URLSearchParams(window.location.search).get("id");
+}
+
 // Gets the encoded game state from the `state` query parameter. If not present, returns null.
 const getGameState = () => {
     const search = window.location.search;
@@ -28,11 +33,11 @@ const asInt = (tileIsActive) => tileIsActive ? 1 : 0;
 
 // Encode the dataset ID and tiles into a game state string. `tiles` is a 24-item array
 // of booleans representing a tile being marked (true) or unmarked (false).
-const encodeState = (datasetID, tiles) => {
+const encodeState = (datasetID, gameID, tiles) => {
     let checksum = 0;
     let encodedState = "";
 
-
+    // Add tiles
     for (let i = 0; i < 4; i++) {
         let tileStartIndex = i * 6;
         let unencodedTiles =
@@ -49,9 +54,14 @@ const encodeState = (datasetID, tiles) => {
         encodedState += asEncodedChar(encodedTiles);
     }
 
+    // OR with dataset ID
     const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
-
     checksum += encodedDatasetID;
+
+    // Add game ID values
+    for(let i in gameID) {
+        checksum += gameID.codePointAt(i)
+    }
 
     // Will be modulo 64 due to 6-bit encoding
     const encodedChecksum = checksum ^ ENCODING_VALUES[5];
@@ -93,6 +103,14 @@ const decodeState = (gameState) => {
     const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
 
     checksum += encodedDatasetID;
+    
+    // Add game ID values
+    const boardID = getBoardID();
+    for(let i in boardID) {
+        checksum += boardID.codePointAt(i)
+    }
+
+    // This happens in encoding stage when ORed into halves
     checksum %= 64;
 
     const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
@@ -182,8 +200,9 @@ const onTileClick = (event) => {
     state.tiles[tileIndex] = !state.tiles[tileIndex];
 
     checkBingo(state.tiles);
+    const boardID = getBoardID();
 
-    const newEncodedState = encodeState(state.datasetID, state.tiles);
+    const newEncodedState = encodeState(state.datasetID, boardID, state.tiles);
 
     // Update game state in URL
     const url = new URL(window.location);
@@ -335,7 +354,7 @@ const goToLanding = () => {
 
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
-    const boardId = new URLSearchParams(window.location.search).get("id");
+    const boardId = getBoardID();
 
     let state = getGameState();
     if (!state) {

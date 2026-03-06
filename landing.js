@@ -33,7 +33,7 @@ const onCreateGameClicked = () => {
     }
     
     let tileStates = new Array(24).fill(false); // All tiles unmarked
-    let gameState = encodeState(selectedDatasetID, tileStates); // Initialize state
+    let gameState = encodeState(selectedDatasetID, playerName, tileStates); // Initialize state
 
     // Redirect to game page with dataset ID and initial state in URL
     const url = new URL(window.location);
