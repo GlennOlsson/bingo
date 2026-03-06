@@ -1,6 +1,7 @@
 // Each dataset has a `name`, `description`, and an `data` array of data items. The dataset
-// needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is optional and
-// indicates which item should be used as the free space in the center of the card. It should
+// needs at least 25 (or 24 and a `freebie`) items to fill a Bingo card. The `freebie` attribute is 
+// an optional list indicating which items can be used as the free space in the center of the card. One 
+// item will be picked at random (deterministically based on the board id). The items in `freebie` should
 // NOT be included in the `data` array.
 const DATASETS = {
     0: {
@@ -17,7 +18,7 @@ const DATASETS = {
     1: {
         name: "US States",
         description: "The 48 continental US States with California as the free space",
-        freebie: "California",
+        freebie: ["California"],
         data: [
             "Alabama",
             "Arizona",
@@ -66,6 +67,60 @@ const DATASETS = {
             "West Virginia",
             "Wisconsin",
             "Wyoming"
+        ]
+    },
+    2: {
+        name: "Tignes 2026",
+        description: "I will buy a Jägermeister shot to the first 5 people to get Bingo. Join the Bingo Whatsapp group",
+        freebie: ["Go to Apres"],
+        data: [
+            "Meet people from 5 different countries",
+            "Meet a person from each continent (except Antarctica)",
+            "Kiss someone in a lift",
+            "Do a shirtless run",
+            "Have a shot before lunch",
+            "Accidentally drop something from the lift",
+            "Wipeout",
+            "Throw up",
+            "Your friend throws up",
+            "Go sledding",
+            "Be at the lift when it opens ",
+            "Have a shot in the lift ",
+            "Get frostbitten",
+            "Night ski",
+            "Clog a toilet",
+            "Spend a night in another apartment",
+            "Visit the hospital",
+            "Ride a magic carpet lift",
+            "Hurt yourself in an accident",
+            "The lift stops with you in it (>2min)",
+            "Get a sunburn",
+            "Someone else gets bingo",
+            "Snowstorm closes the lifts",
+            "Get locked out of your apartment",
+            "Do a shot ski",
+            "Drink a German U-boot (Jägermeister)",
+            "Aperol spritz in the sun",
+            "Cause an accident on a run",
+            "Take a snus",
+            "Dance on a table at apres",
+            "Someone says “I have a girlfriend/boyfriend”",
+            "Met someone living in the same city as you",
+            "Someone introduces themself to you for the 3rd time",
+            "Lose your group",
+            "Meet someone you know",
+            "Successfully wingman someone",
+            "Someone says “This is like a movie”",
+            "Go skiing after a whole night without sleep",
+            "Pet a dog",
+            "Your gear breaks",
+            "Ride each lift once",
+            "Ride into a net/barrier",
+            "Break a glass in a bar",
+            "Zamboni a beer",
+            "Have a homecooked meal",
+            "Ca plane pa moi plays at apres",
+            "Hook up in a bathroom",
         ]
     }
 }

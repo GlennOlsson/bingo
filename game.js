@@ -13,6 +13,11 @@ const ENCODING_VALUES = [
     42, 18, 51, 30, 45, 27
 ]
 
+// Get the board ID inside the `id` query parameter
+const getBoardID = () => {
+    return new URLSearchParams(window.location.search).get("id");
+}
+
 // Gets the encoded game state from the `state` query parameter. If not present, returns null.
 const getGameState = () => {
     const search = window.location.search;
@@ -26,32 +31,38 @@ const asEncodedChar = (value) => CHARSET.charAt(value);
 // Converts a boolean tile state to an integer (1 for true, 0 for false).
 const asInt = (tileIsActive) => tileIsActive ? 1 : 0;
 
-// Encode the dataset ID and tiles into a game state string. `tiles` is a 24-item array
+// Encode the dataset ID and tiles into a game state string. `boardID` is the 
+// `id` URL query parameter. `tiles` is a 24-item array
 // of booleans representing a tile being marked (true) or unmarked (false).
-const encodeState = (datasetID, tiles) => {
+const encodeState = (datasetID, boardID, tiles) => {
     let checksum = 0;
     let encodedState = "";
 
-    
+    // Add tiles
     for (let i = 0; i < 4; i++) {
         let tileStartIndex = i * 6;
-        let unencodedTiles = 
+        let unencodedTiles =
             asInt(tiles[tileStartIndex]) << 5 |
             asInt(tiles[tileStartIndex + 1]) << 4 |
             asInt(tiles[tileStartIndex + 2]) << 3 |
             asInt(tiles[tileStartIndex + 3]) << 2 |
             asInt(tiles[tileStartIndex + 4]) << 1 |
             asInt(tiles[tileStartIndex + 5]);
-        
+
         let encodedTiles = unencodedTiles ^ ENCODING_VALUES[i];
-        
+
         checksum += encodedTiles;
         encodedState += asEncodedChar(encodedTiles);
     }
-    
+
+    // OR with dataset ID
     const encodedDatasetID = datasetID ^ ENCODING_VALUES[4];
-    
     checksum += encodedDatasetID;
+
+    // Add board ID values
+    for (let i in boardID) {
+        checksum += boardID.codePointAt(i)
+    }
 
     // Will be modulo 64 due to 6-bit encoding
     const encodedChecksum = checksum ^ ENCODING_VALUES[5];
@@ -59,7 +70,7 @@ const encodeState = (datasetID, tiles) => {
     // Half of each char is checksum, half is dataset ID
     encodedState += asEncodedChar((encodedDatasetID & 0b111000) | (encodedChecksum & 0b000111));
     encodedState += asEncodedChar((encodedDatasetID & 0b000111) | (encodedChecksum & 0b111000));
-    
+
     return encodedState;
 }
 
@@ -93,8 +104,16 @@ const decodeState = (gameState) => {
     const encodedDatasetID = ((endChar1Val & 0b111000) | (endChar2Val & 0b000111));
 
     checksum += encodedDatasetID;
+
+    // Add board ID values
+    const boardID = getBoardID();
+    for (let i in boardID) {
+        checksum += boardID.codePointAt(i);
+    }
+
+    // This happens in encoding stage when ORed into halves
     checksum %= 64;
-    
+
     const datasetID = encodedDatasetID ^ ENCODING_VALUES[4];
 
     const decodedChecksum = ((endChar1Val & 0b000111) | (endChar2Val & 0b111000)) ^ ENCODING_VALUES[5];
@@ -183,7 +202,9 @@ const onTileClick = (event) => {
 
     checkBingo(state.tiles);
 
-    const newEncodedState = encodeState(state.datasetID, state.tiles);
+    const boardID = getBoardID();
+
+    const newEncodedState = encodeState(state.datasetID, boardID, state.tiles);
 
     // Update game state in URL
     const url = new URL(window.location);
@@ -249,6 +270,36 @@ const shuffleArray = (array, seed) => {
     return shuffledArray;
 }
 
+// Get the freebie tile. Either pick a random item from the freebie list (if it exists). The
+// random value is deterministic based on the seed, just like `shuffleArray` and thus will
+// be the same as long as the id is the same. If `freebie` does not exist or is not a list, returns
+// the 25th element in the shuffled data array which is the first data item not used on the board.
+const getFreebie = (dataset, seed, shuffledData) => {
+    const key = "freebie"
+
+    const fromDataSet = () => shuffledData[24];
+
+    // If freebie does not exist, return early
+    if (!dataset.hasOwnProperty(key))
+        return fromDataSet();
+
+    const freebie = dataset[key]
+    // If length doesn't exist on freebie or the list has no elements
+    if (!freebie.length || freebie.length < 1)
+        return fromDataSet();
+
+    // Could be a string at this point. Don't allow this
+    if (typeof freebie == "string")
+        return fromDataSet();
+
+    let length = freebie.length;
+    let rng = new Math.seedrandom(seed);
+
+    let freebieIndex = Math.abs(rng.int32() % length);
+
+    return freebie[freebieIndex]
+}
+
 // Sets up the game title and description based on the dataset.
 const setupGameTitle = (dataset) => {
     const titleElem = document.getElementById(ELEM_ID_GAME_TITLE);
@@ -277,8 +328,7 @@ const setupGame = (boardId, datasetID, tiles) => {
     }
 
     let shuffledData = shuffleArray(dataset.data, boardId);
-    // Free title is either from dataset or the 25th shuffled item
-    let freeTileLabel = dataset.freebie ? dataset.freebie : shuffledData[24];
+    let freeTileLabel = getFreebie(dataset, boardId, shuffledData);
 
     createBoard(shuffledData, freeTileLabel);
 
@@ -306,7 +356,7 @@ const goToLanding = () => {
 
 // Loads the game state from the URL and initializes the game board.
 const loadGame = () => {
-    const boardId = new URLSearchParams(window.location.search).get("id");
+    const boardId = getBoardID();
 
     let state = getGameState();
     if (!state) {
