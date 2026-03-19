@@ -292,6 +292,10 @@ footer {
     background: var(--surface);
 }
 
+footer > a > img {
+    padding: 10px;
+}
+
 footer a {
     color: var(--primary-color);
     text-decoration: none;
