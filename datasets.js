@@ -119,7 +119,7 @@ const DATASETS = {
             "Break a glass in a bar",
             "Zamboni a beer",
             "Have a home cooked meal",
-            "Ca plane pa moi plays at apres",
+            "'Ca plane pour moi' plays at apres",
             "Hook up in a bathroom",
             "Start a snowball fight",
             "Build a snow man",
