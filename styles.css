@@ -292,8 +292,8 @@ footer {
     background: var(--surface);
 }
 
-footer > a > img {
-    padding: 10px;
+footer > a {
+    margin: 10px;
 }
 
 footer a {
